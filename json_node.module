@@ -1,0 +1,28 @@
+<?php
+
+use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
+
+function json_node_form_system_site_information_settings_alter (array &$form, FormStateInterface $form_state, $form_id) {
+	
+	$dvalue = 'No API Key yet';
+	$api = \Drupal::configFactory()->getEditable('system.site')->get('siteapikey');
+	if($api){
+		$dvalue = $api;
+		$form['actions']['submit']['#value'] = t('Update Configuration');
+	}
+	$form['site_api_key'] = [
+      '#type' => 'textfield',
+      '#title' => t('Site API Key'),
+      '#default_value' => $dvalue ,
+	  '#weight' => -10
+    ];
+	$form['#submit'][] = 'json_node_extra';
+}
+
+function json_node_extra ($form, FormStateInterface $form_state) {
+	 \Drupal::configFactory()->getEditable('system.site')
+	->set('siteapikey', $form_state->getValue('site_api_key'))
+    ->save();
+	drupal_set_message('Site API Key has been saved as -> '. $form_state->getValue('site_api_key'));
+}

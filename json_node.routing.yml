@@ -1,0 +1,7 @@
+json.node_covert:
+  path: '/json-node/{nid}'
+  defaults:
+    _controller: '\Drupal\json_node\Controller\JsonNode::getJsonNode'
+    _title: 'Node as Json'
+  requirements: 
+    _permission: 'access content'
